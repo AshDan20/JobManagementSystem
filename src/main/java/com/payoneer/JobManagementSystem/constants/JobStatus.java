@@ -1,6 +1,7 @@
 package com.payoneer.JobManagementSystem.constants;
 
 /**
+ * @author Ashish Dandekar
  * Holds different possible statuses that the job can be with
  */
 public class JobStatus {

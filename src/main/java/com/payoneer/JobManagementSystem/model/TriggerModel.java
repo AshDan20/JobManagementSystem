@@ -1,10 +1,8 @@
 package com.payoneer.JobManagementSystem.model;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.Data;
 
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -27,10 +25,25 @@ public class TriggerModel implements Serializable {
     private String name;
 
     @NotEmpty
+    private String triggergroup;
+
+    @NotEmpty
     private String cron;
+
+    public TriggerModel() {
+
+    }
 
     public Long getId() {
         return id;
+    }
+
+    public String getTriggergroup() {
+        return triggergroup;
+    }
+
+    public void setTriggergroup(String triggergroup) {
+        this.triggergroup = triggergroup;
     }
 
     public void setId(Long id) {
@@ -50,6 +63,13 @@ public class TriggerModel implements Serializable {
     }
 
     public void setCron(String cron) {
+        this.cron = cron;
+    }
+
+    public TriggerModel(Long id, @NotEmpty String name, @NotEmpty String triggergroup, @NotEmpty String cron) {
+        this.id = id;
+        this.name = name;
+        this.triggergroup = triggergroup;
         this.cron = cron;
     }
 }

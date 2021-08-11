@@ -1,6 +1,7 @@
 package com.payoneer.JobManagementSystem.service;
 
 import com.payoneer.JobManagementSystem.model.TriggerModel;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -17,6 +18,5 @@ public interface TriggerService {
 
     List<TriggerModel> getAllTriggers();
 
-    void deleteTrigger(Long triggerId);
-
+    ResponseEntity deleteTrigger(long triggerId);
 }

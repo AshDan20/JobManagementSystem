@@ -45,7 +45,7 @@ public class RefreshCacheJob implements Job {
     @Override
     public void execute(JobExecutionContext jobExecutionContext) throws JobExecutionException {
         logger.info("[jobName] : " + JOB_NAME + " : TRIGGERED");
-        long jobRunTime = 30000;
+        long jobRunTime = 180000;
         //do something
         try {
             doJobTask(jobRunTime);
@@ -64,6 +64,7 @@ public class RefreshCacheJob implements Job {
         //change satus to RUNNING
         refreshCacheJob.setStatus(JobStatus.RUNNING);
         jobRepository.save(refreshCacheJob);
+        logger.info("[jobName] : " +JOB_NAME + " : RUNNING....");
         TimeUnit.MILLISECONDS.sleep(jobRunTime);
     }
 
@@ -80,10 +81,10 @@ public class RefreshCacheJob implements Job {
     }
 
 
-    public static JobDetail buildRefreshCacheJobDetail() {
+    public static JobDetail buildRefreshCacheJobDetail(JobModel jobModel) {
 
         return JobBuilder.newJob(RefreshCacheJob.class)
-                .withIdentity(UUID.randomUUID().toString(), "cache-group")
+                .withIdentity(UUID.randomUUID().toString(), jobModel.getJobgroup())
                 .withDescription(refreshCacheJob.getJobname())
                 //.usingJobData(jobDataMap)
                 .storeDurably()

@@ -7,12 +7,17 @@ import com.payoneer.JobManagementSystem.repository.JobRepository;
 import com.payoneer.JobManagementSystem.service.impl.JobServiceImpl;
 import lombok.extern.slf4j.Slf4j;
 import org.quartz.Job;
+import org.quartz.JobBuilder;
+import org.quartz.JobDataMap;
+import org.quartz.JobDetail;
 import org.quartz.JobExecutionContext;
 import org.quartz.JobExecutionException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import java.util.List;
+import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 
 @Slf4j
@@ -36,6 +41,16 @@ public class SendEmailJob extends JobServiceImpl implements Job {
         sendEmailJobModel = jobModel;
     }
 
+    public static JobDetail buildSendEmailJobDetail(JobModel jobModel) {
+        JobDataMap jobDataMap = new JobDataMap();
+        return JobBuilder.newJob(SendEmailJob.class)
+                .withIdentity(UUID.randomUUID().toString(), jobModel.getJobgroup())
+                .withDescription(jobModel.getJobname())
+                //.usingJobData(jobDataMap)
+                .storeDurably()
+                .build();
+    }
+
     @Override
     public void execute(JobExecutionContext jobExecutionContext) throws JobExecutionException {
         logger.info("[jobName] : " + JOB_NAME + " : TRIGGERED");
@@ -57,9 +72,10 @@ public class SendEmailJob extends JobServiceImpl implements Job {
     private void doJobTask(long jobRunTime) throws InterruptedException {
         //change satus to RUNNING
         sendEmailJobModel.setStatus(JobStatus.RUNNING);
-        TimeUnit.MILLISECONDS.sleep(3000);
         jobRepository.save(sendEmailJobModel);
-    }
+        logger.info("[jobName] : " +JOB_NAME + " : RUNNING....");
+        TimeUnit.MILLISECONDS.sleep(60000); // let it for this time
+     }
 
     public Long getJobId() {
         return this.jobId;
@@ -72,7 +88,6 @@ public class SendEmailJob extends JobServiceImpl implements Job {
     public JobModel getJob() {
         return sendEmailJobModel;
     }
-
 
 
 }

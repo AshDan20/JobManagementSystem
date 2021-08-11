@@ -16,11 +16,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
-import org.springframework.stereotype.Service;
 
 import java.util.List;
 
 /**
+ * @author Ashish Dandekar
+ *
  *
  */
 @Component
@@ -54,7 +55,7 @@ public class JobServiceImpl implements JobService {
             logger.error("Error occurred while saving the job " + ex.getStackTrace());
             throw new JobManagementException("Error while creating job" + ex.getMessage());
         }
-        return new ResponseEntity<>("Job Created Successfully", HttpStatus.OK);
+        return new ResponseEntity<>("Job Created Successfully", HttpStatus.CREATED);
     }
 
     private boolean triggerValid(JobModel jobModel) {
@@ -123,6 +124,5 @@ public class JobServiceImpl implements JobService {
         }
         return new ResponseEntity<>("The job has been updated successfully.",HttpStatus.OK);
     }
-
 
 }

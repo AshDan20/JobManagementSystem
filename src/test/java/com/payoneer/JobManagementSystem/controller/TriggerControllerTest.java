@@ -5,7 +5,7 @@ import com.fasterxml.jackson.databind.ObjectWriter;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.payoneer.JobManagementSystem.model.JobModel;
 import com.payoneer.JobManagementSystem.model.TriggerModel;
-import com.payoneer.JobManagementSystem.repository.JobRepository;
+import com.payoneer.JobManagementSystem.repository.TriggerRepository;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -28,37 +28,50 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @AutoConfigureMockMvc
 @Sql(executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD, scripts = "classpath:data.sql")
 
-class JobControllerTest {
+class TriggerControllerTest {
+
     @Autowired
     private MockMvc mockMvc;
 
     @Autowired
-    private JobRepository jobRepository;
+    private TriggerRepository triggerRepository;
 
     @Autowired
     private ObjectMapper objectMapper;
 
+
     @Test
-    @DisplayName("Test if all the jobs are returned")
-    void testGetAllJobs() throws Exception {
+    @DisplayName("Test - get all triggers")
+    void getAllTriggers() throws Exception {
         mockMvc
-                .perform(get("/job"))
+                .perform(get("/trigger"))
                 .andExpect(status().is2xxSuccessful())
-                .andExpect(jsonPath("$", hasSize((int) jobRepository.count())));
+                .andExpect(jsonPath("$", hasSize((int) triggerRepository.count())));
     }
 
+    @Test
+    @DisplayName("Test - get trigger by ID")
+    void getTriggerById() throws Exception {
+        mockMvc.perform( MockMvcRequestBuilders
+                .get("/trigger/4")
+                .contentType(MediaType.APPLICATION_JSON)
+                .accept(MediaType.APPLICATION_JSON))
+                .andExpect(status().is2xxSuccessful())
+                .andExpect(jsonPath("$.id").value("4"))
+                .andExpect(jsonPath("$.name").value("EveryTwoMinutesTrigger"));
+    }
 
     @Test
-    @DisplayName("Test - new job creation")
-    public void testCreateJob() throws Exception
-    {
+    @DisplayName("Test - create new trigger")
+    void createTrigger() throws Exception {
+
         ObjectMapper mapper = new ObjectMapper();
         mapper.configure(SerializationFeature.WRAP_ROOT_VALUE, false);
         ObjectWriter ow = mapper.writer().withDefaultPrettyPrinter();
-        JobModel jobObj = createJobModelObj();
-        String requestJson=ow.writeValueAsString(jobObj);
+        TriggerModel triggerObj = new TriggerModel(null, "Test-Trigger-Name", "Test-Trigger-Group", "0 0/2 * 1/1 * ? *");
+        String requestJson=ow.writeValueAsString(triggerObj);
         mockMvc.perform( MockMvcRequestBuilders
-                .post("/job")
+                .post("/trigger")
                 .content(requestJson)
                 .contentType(MediaType.APPLICATION_JSON)
                 .accept(MediaType.APPLICATION_JSON))
@@ -66,40 +79,12 @@ class JobControllerTest {
     }
 
     @Test
-    @DisplayName("Test - delete job")
-    public void testDeleteJobById() throws Exception
-    {
+    @DisplayName("Test - delete trigger")
+    void deleteTrigger() throws Exception {
         mockMvc.perform( MockMvcRequestBuilders
-                .delete("/job/deleteJob/10")
+                .delete("/trigger/6")
                 .contentType(MediaType.APPLICATION_JSON)
                 .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().is2xxSuccessful());
-    }
-
-
-    @Test
-    @DisplayName("Test - get job by ID")
-    public void testGetJobById() throws Exception
-    {
-        mockMvc.perform( MockMvcRequestBuilders
-                .get("/job/1")
-                .contentType(MediaType.APPLICATION_JSON)
-                .accept(MediaType.APPLICATION_JSON))
-                .andExpect(status().is2xxSuccessful())
-                .andExpect(jsonPath("$.id").value("1"))
-                .andExpect(jsonPath("$.jobname").value("SendEmailJob"));
-    }
-
-
-
-    //mock jobModelObj
-    private JobModel createJobModelObj() {
-        JobModel temp = new JobModel();
-        temp.setJobname("DBUpdateJob");
-        temp.setJobgroup("Data-Load-Group");
-        TriggerModel jobTrigger = new TriggerModel();
-        jobTrigger.setId(2l);
-        temp.setTrigger(jobTrigger);
-        return temp;
     }
 }

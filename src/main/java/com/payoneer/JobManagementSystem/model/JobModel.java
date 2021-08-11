@@ -20,6 +20,7 @@ import java.time.LocalDateTime;
 
 /**
  * @author Ashish Dandekar
+ *
  */
 
 @Entity
@@ -43,7 +44,7 @@ public class JobModel implements Serializable {
     @OneToOne
     private TriggerModel trigger;
 
-    @ColumnDefault("'QUEUED'")
+    @Column(columnDefinition = "varchar(255) default 'QUEUED'")
     private String status;
 
     @CreatedDate
