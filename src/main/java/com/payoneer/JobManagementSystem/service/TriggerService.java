@@ -12,7 +12,7 @@ import java.util.List;
 @Service
 public interface TriggerService {
 
-    TriggerModel createTrigger(TriggerModel triggerModel);
+    ResponseEntity<String> createTrigger(TriggerModel triggerModel);
 
     TriggerModel getTriggerById(Long triggerId);
 

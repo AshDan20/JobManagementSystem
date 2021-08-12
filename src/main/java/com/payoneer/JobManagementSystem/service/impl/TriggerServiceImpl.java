@@ -28,9 +28,15 @@ public class TriggerServiceImpl implements TriggerService {
     TriggerRepository triggerRepository;
 
     @Override
-    public TriggerModel createTrigger(TriggerModel triggerModel) {
-        triggerRepository.save(triggerModel);
-        return triggerModel;
+    public ResponseEntity<String> createTrigger(TriggerModel triggerModel) {
+        try {
+            triggerRepository.save(triggerModel);
+            logger.info("Saved/Updated Trigger - Trigger_ID" + triggerModel.getId());
+        } catch (Exception ex) {
+            logger.error("Error occurred while saving the Trigger " + ex.getStackTrace());
+            throw new JobManagementException("Error while creating Trigger" + ex.getMessage());
+        }
+        return new ResponseEntity("Trigger created successfully",HttpStatus.CREATED);
     }
 
     @Override

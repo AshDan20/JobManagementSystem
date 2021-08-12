@@ -33,6 +33,23 @@
 3. Update a Job - [PUT request]
     e.g.  http://localhost:8080/job
 
+4. Create a job - [POST request]
+    URL - http://localhost:8080/job
+
+    [REQUEST]
+
+    {
+      "jobname": "LoadUpstreamDataJob123",
+      "jobgroup": "Data-Load-Group",
+      "trigger": {
+        "id": 2
+      }
+    }
+    
+    [RESPONSE]
+    STATUS CODE - 201
+    
+    
 
 **JOB Scheduler APIs**
 1. Schedule a particular job... This would schedule a job and then it would be triggered as per CRON expression defined in DB
@@ -53,6 +70,18 @@
    
 2. Create a trigger - [POST request]
     e.g http://localhost:8080/trigger
+    
+    [REQUEST]
+    
+    {
+      "name": "EveryTwoMinutesTriggertestwet",
+      "triggergroup": "EveryTwoMinutesTriggertestst",
+      "cron": "0 0/2 * 1/1 * ? *"
+    }
+    
+    [RESPONSE]
+    Status Code: 201
+    
     
 3. Get Trigger By ID - [GET request]
     e.g. http://localhost:8080/trigger/{id}
