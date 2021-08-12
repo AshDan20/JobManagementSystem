@@ -82,6 +82,23 @@ Below is an **POST** API to schedule the job. After hitting this API job would b
 - in case of any failure while running the job, status is updated to **FAILED** in DB
 
 
+**Database Design**
+
+1. [TABLE _ JOB]
+    ID          [PK, AUTOUPDATING]	
+    CREATED  	[DATE]
+    JOBGROUP  	[VARCHAR]
+    JOBNAME  	[VARCHAR]
+    MODIFIED  	[DATE]
+    STATUS  	[VARCHAR]
+    TRIGGER_ID  [FK, INTEGER]
+    
+1. [TABLE _ TRIGGER]
+    ID  	        [PK, AUTOUPDATING]	
+    CRON  	        [VARCHAR]
+    NAME  	        [VARCHAR]
+    TRIGGERGROUP    [VARCHAR] 
+
 
 ------------------------------------------------[LOGS FOR REFERENCE] ----------------------------------------------------
 03:10:50.174  INFO 20268 --- [nio-8080-exec-1] o.a.c.c.C.[Tomcat].[localhost].[/]       : Initializing Spring DispatcherServlet 'dispatcherServlet'
