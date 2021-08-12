@@ -127,6 +127,35 @@ Below is an **POST** API to schedule the job. After hitting this API job would b
     CRON  	        [VARCHAR]
     NAME  	        [VARCHAR]
     TRIGGERGROUP    [VARCHAR] 
+    
+    
+**HOW TO ACCESS DB**
+
+Run the app and hit the below URL in the browser
+
+  http://localhost:8080/h2-console/login.do?jsessionid=79cbd24ace64c2a3317b73f8958406c2
+
+select [saved settings] - Generic H2 (Embedded)
+        [Driver class] - org.h2.Driver
+        [JDBC URL] -jdbc:h2:mem:testdb
+        [username] - SA
+        [password] - _blank_
+
+
+below should be the conf for H2 DB in application.yml or properties file
+
+spring:
+  jpa:
+    open-in-view: true
+    defer-datasource-initialization: true
+    hibernate:
+      ddl-auto: create
+    show-sql: false
+  h2:
+    console:
+      enabled: true
+  datasource:
+    url: jdbc:h2:mem:testdb
 
 
 ------------------------------------------------[LOGS FOR REFERENCE] ----------------------------------------------------
